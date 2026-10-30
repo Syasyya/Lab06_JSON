@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+    <title>Display Book Records</title>
+</head>
+<body>
+
+    <h2>Select a Book</h2>
+
+    <select id="bookSelect">
+        <option value="">-- Select Book --</option>
+    </select>
+
+    <br><br>
+
+    <div id="result"></div>
+
+    <script>
+        // URL of the JSON file stored in GitHub
+        const jsonURL = "https://raw.githubusercontent.com/Syasyya/Lab06_JSON/refs/heads/main/Book.json";
+        // fetch() retrieves the JSON data from the GitHub repository
+        fetch(jsonURL)
+        .then(response => response.json()) // Convert the response into JSON format
+        .then(data => { // Process the JSON data
+
+            const select = document.getElementById("bookSelect");
+
+            data.Books.forEach(book => {
+
+                let option = document.createElement("option");
+
+                option.value = book.Title;
+                option.textContent = book.Title;
+
+                select.appendChild(option);
+
+            });
+
+            select.addEventListener("change", function() {
+
+                let selectedBook = data.Books.find(
+                    book => book.Title === this.value
+                );
+
+                if(selectedBook){
+
+                    document.getElementById("result").innerHTML = `
+                        <h3>${selectedBook.Title}</h3>
+                        <p><strong>Author:</strong> ${selectedBook.Author}</p>
+                        <p><strong>Publication Year:</strong> ${selectedBook["Publication Year"]}</p>
+                        <p><strong>Genres:</strong> ${selectedBook.Genres.join(", ")}</p>
+                    `;
+                }
+
+            });
+
+        })
+        .catch(error => console.log(error));
+
+    </script>
+
+</body>
+</html>
